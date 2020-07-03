@@ -21,6 +21,8 @@ import java.lang.reflect.Method;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
+ * 方法调用者对象，用于保存方法对象 + 方法的参数类型或者返回值类型
+ *
  * @author Clinton Begin
  */
 public class MethodInvoker implements Invoker {
@@ -32,8 +34,12 @@ public class MethodInvoker implements Invoker {
     this.method = method;
 
     if (method.getParameterTypes().length == 1) {
+      // 参数值为1，则type存储入参的类型
+      // 这里应该是表示的是setter方法
       type = method.getParameterTypes()[0];
     } else {
+      // 无参则记录返回值
+      // 这里用于存储getter方法的返回值类型
       type = method.getReturnType();
     }
   }

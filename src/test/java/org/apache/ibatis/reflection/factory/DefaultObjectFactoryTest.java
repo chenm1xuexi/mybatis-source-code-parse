@@ -15,6 +15,7 @@
  */
 package org.apache.ibatis.reflection.factory;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,6 +29,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.ibatis.reflection.ReflectionException;
+import org.apache.ibatis.reflection.Reflector;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +39,38 @@ import org.junit.jupiter.api.Test;
  * @author Ryan Lamore
  */
 class DefaultObjectFactoryTest {
+
+  @Test
+  void testField() throws IllegalAccessException {
+
+     TestClass test1 = new TestClass("feifei", 1);
+     TestClass test2 = new TestClass("xixi", 2);
+
+    Class<TestClass> aClass = TestClass.class;
+    Field[] fields = aClass.getDeclaredFields();
+
+    // 对属性对象进行遍历, 进行属性copy
+    for (Field field : fields) {
+      try {
+        try {
+          Object o = field.get(test2);
+          System.out.println(o);
+          // set(obj, value) obj => 对象 value => 要更改的属性值
+          field.set(test2, field.get(test1));
+        } catch (IllegalAccessException e) {
+          if (Reflector.canControlMemberAccessible()) {
+            field.setAccessible(true);
+            field.set(test2, field.get(test1));
+          } else {
+            throw e;
+          }
+        }
+      } catch (Exception e) {
+        // Nothing useful to do, will only fail on final fields, which will be ignored.
+      }
+      System.out.println(test2);
+    }
+  }
 
   @Test
   void createClass() {

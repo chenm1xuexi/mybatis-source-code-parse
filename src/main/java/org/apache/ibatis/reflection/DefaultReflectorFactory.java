@@ -38,6 +38,14 @@ public class DefaultReflectorFactory implements ReflectorFactory {
     this.classCacheEnabled = classCacheEnabled;
   }
 
+  /**
+   * 通过类对象来获取{@link Reflector}对象
+   *
+   * @author shixiongfei
+   * @date 2020/7/3 4:44 下午
+   * @param type 类对象
+   * @return
+   */
   @Override
   public Reflector findForClass(Class<?> type) {
     if (classCacheEnabled) {

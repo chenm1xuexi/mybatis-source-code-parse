@@ -26,6 +26,15 @@ import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 
 /**
+ * 参数类型解析器
+ *
+ * Type 接口包含 4 个子接口和 1 个实现类：
+ *  1. Class：原始类型
+ *  2. ParameterizedType：泛型类型，如：List<String>
+ *  3. TypeVariable：泛型类型变量，如: List<T> 中的 T
+ *  4. GenericArrayType：组成元素是 ParameterizedType 或 TypeVariable 的数组类型，如：List<String>[]、T[]
+ *  5. WildcardType：通配符泛型类型变量，如：List<?> 中的 ?
+ *
  * @author Iwao AVE!
  */
 public class TypeParameterResolver {
@@ -33,10 +42,16 @@ public class TypeParameterResolver {
   /**
    * @return The field type as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
+   *
+   *
+   *
    */
   public static Type resolveFieldType(Field field, Type srcType) {
+    // 获取字段声明的类型
     Type fieldType = field.getGenericType();
+    // 获取字段声明的类型类对象
     Class<?> declaringClass = field.getDeclaringClass();
+    // 解析类型
     return resolveType(fieldType, srcType, declaringClass);
   }
 
@@ -51,11 +66,15 @@ public class TypeParameterResolver {
   }
 
   /**
+   * 将方法的参数类型数组解析成运行时实际的类型
+   *
    * @return The parameter types of the method as an array of {@link Type}s. If they have type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
   public static Type[] resolveParamTypes(Method method, Type srcType) {
+    // 获取通用的方法参数类型数组
     Type[] paramTypes = method.getGenericParameterTypes();
+    // 获取方法所处的类对象
     Class<?> declaringClass = method.getDeclaringClass();
     Type[] result = new Type[paramTypes.length];
     for (int i = 0; i < paramTypes.length; i++) {
@@ -64,6 +83,14 @@ public class TypeParameterResolver {
     return result;
   }
 
+  /**
+   * 获取类型信息
+   *
+   * @param type 根据是否有泛型信息签名选择传入泛型类型或简单类型
+   * @param srcType 引用字段/方法的类（可能是子类，字段和方法在父类声明）
+   * @param declaringClass 字段/方法声明的类
+   * @return
+   */
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
     if (type instanceof TypeVariable) {
       return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
@@ -76,6 +103,12 @@ public class TypeParameterResolver {
     }
   }
 
+  /**
+   * 解析数组类型
+   *
+   * @author shixiongfei
+   * @date 2020/7/3 11:58 上午
+   */
   private static Type resolveGenericArrayType(GenericArrayType genericArrayType, Type srcType, Class<?> declaringClass) {
     Type componentType = genericArrayType.getGenericComponentType();
     Type resolvedComponentType = null;

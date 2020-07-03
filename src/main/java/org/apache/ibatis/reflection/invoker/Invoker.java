@@ -19,9 +19,28 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Clinton Begin
+ *
+ *  用于抽象设置和读取字段值的操作基类
+ *
+ * {@link MethodInvoker} 反射执行getter/setter方法
+ * {@link GetFieldInvoker} {@link SetFieldInvoker} 反射执行Field对象的get/set方法
+ *
  */
 public interface Invoker {
+
+  /**
+   * 通过反射设置或读取字段值
+   *
+   * @author shixiongfei
+   * @date 2020/7/3 11:51 上午
+   */
   Object invoke(Object target, Object[] args) throws IllegalAccessException, InvocationTargetException;
 
+  /**
+   * 获取字段的class对象
+   * setter方法就是获取其参数类型
+   * getter方法就是获取其返回类型
+   * @return
+   */
   Class<?> getType();
 }

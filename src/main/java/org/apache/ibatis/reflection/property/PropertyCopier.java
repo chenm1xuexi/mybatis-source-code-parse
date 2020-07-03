@@ -20,6 +20,8 @@ import java.lang.reflect.Field;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
+ * pojo对象的属性值拷贝工具类
+ *
  * @author Clinton Begin
  */
 public final class PropertyCopier {
@@ -28,10 +30,22 @@ public final class PropertyCopier {
     // Prevent Instantiation of Static Class
   }
 
+  /**
+   *
+   *
+   * @author shixiongfei
+   * @date 2020/6/9 11:44 下午
+   * @param type 对象所属的类对象
+   * @param sourceBean 源对象
+   * @param destinationBean	目标对象
+   * @return
+   */
   public static void copyBeanProperties(Class<?> type, Object sourceBean, Object destinationBean) {
     Class<?> parent = type;
     while (parent != null) {
+      // 获取类对象中所有声明的属性（不包含继承的属性）
       final Field[] fields = parent.getDeclaredFields();
+      // 对属性对象进行遍历
       for (Field field : fields) {
         try {
           try {

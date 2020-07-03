@@ -15,6 +15,8 @@
  */
 package org.apache.ibatis.reflection.factory;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 /**
  * TestClass
  *
@@ -27,5 +29,13 @@ public class TestClass {
   public TestClass(String myString, Integer myInteger) {
     this.myString = myString;
     this.myInteger = myInteger;
+  }
+
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this)
+      .append("myString", myString)
+      .append("myInteger", myInteger)
+      .toString();
   }
 }

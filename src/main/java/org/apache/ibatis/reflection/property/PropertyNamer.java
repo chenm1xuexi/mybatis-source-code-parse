@@ -21,6 +21,8 @@ import org.apache.ibatis.reflection.ReflectionException;
 
 /**
  * @author Clinton Begin
+ * 属性名称工具类，用于获取getter setter方法所对应的属性名称
+ *
  */
 public final class PropertyNamer {
 
@@ -28,6 +30,14 @@ public final class PropertyNamer {
     // Prevent Instantiation of Static Class
   }
 
+  /**
+   * 通过getter setter方法来获取其属性名称
+   *
+   * @author shixiongfei
+   * @date 2020/7/1 11:47 上午
+   * @param name 方法名称
+   * @return  返回方法的字段名称
+   */
   public static String methodToProperty(String name) {
     if (name.startsWith("is")) {
       name = name.substring(2);
